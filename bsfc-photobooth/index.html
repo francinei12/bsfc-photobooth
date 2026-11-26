@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#E58D7D" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <title>BSFC Photobooth — Berkeley Student Food Collective</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Retro Mac OS X Photobooth Window Frame (matches first screen.jpg) -->
+  <div id="booth-shell" class="booth-shell" role="application" aria-label="BSFC Storefront Photobooth">
+    <!-- Top Rainbow Title Bar -->
+    <header class="rainbow-topbar">
+      <!-- Discreet hidden admin trigger (5 rapid taps or 2s hold) -->
+      <button id="admin-trigger" class="admin-trigger" aria-label="Store Admin Trigger" tabindex="-1"></button>
+      <div class="topbar-title">Photobooth</div>
+      <div id="topbar-status" class="topbar-status" aria-live="polite"></div>
+    </header>
+
+    <!-- Main Coral/Salmon Bezel Body -->
+    <main class="booth-bezel">
+      <!-- Rounded White Viewport -->
+      <div class="booth-viewport" id="booth-viewport">
+
+        <!-- ===============================================================
+             SCREEN 1: ATTRACT / IDLE SCREEN (matches first screen.jpg)
+             =============================================================== -->
+        <section id="screen-attract" class="screen active" aria-label="Welcome Screen">
+          <!-- Subtle ? Info Button in Top-Right Corner -->
+          <button id="btn-help" class="help-btn" aria-label="How the photobooth works" title="How it works">?</button>
+
+          <!-- Cooldown indicator pill (visible if 2-min print cooldown is active) -->
+          <div id="attract-cooldown-pill" class="cooldown-pill hidden" aria-live="polite"></div>
+
+          <!-- Visual nod to hanging photostrips on the BSFC community wall -->
+          <div class="community-wall-nod" aria-hidden="true">
+            <div class="wall-string"></div>
+            <div class="hanging-strip strip-a">
+              <div class="strip-pin"></div>
+              <div class="strip-photo">🥑</div>
+              <div class="strip-caption">@bsfcollective</div>
+            </div>
+            <div class="hanging-strip strip-b">
+              <div class="strip-pin"></div>
+              <div class="strip-photo">🍓</div>
+              <div class="strip-caption">co-op love</div>
+            </div>
+            <div class="hanging-strip strip-c">
+              <div class="strip-pin"></div>
+              <div class="strip-photo">🥖</div>
+              <div class="strip-caption">bancroft way</div>
+            </div>
+          </div>
+
+          <!-- Olive-green hand-drawn stars (top-left, matching first screen.jpg) -->
+          <svg class="doodle-stars" viewBox="0 0 180 180" aria-hidden="true">
+            <g fill="#7C8D45" stroke="#F6F7EE" stroke-width="2.5" stroke-linejoin="round">
+              <!-- Large star -->
+              <path d="M52,18 L62,48 L94,48 L68,66 L78,96 L52,78 L26,96 L36,66 L10,48 L42,48 Z"
+                    transform="rotate(-8 52 57)" />
+              <!-- Small upper-right star -->
+              <path d="M126,28 L131,42 L146,42 L134,50 L138,64 L126,56 L114,64 L118,50 L106,42 L121,42 Z"
+                    transform="rotate(10 126 46)" />
+              <!-- Medium lower-left star -->
+              <path d="M46,112 L52,130 L71,130 L56,141 L62,159 L46,148 L30,159 L36,141 L21,130 L40,130 Z"
+                    transform="rotate(6 46 135)" />
+            </g>
+          </svg>
+
+          <!-- Center Touch-To-Start Lips CTA (tap anywhere on attract screen) -->
+          <button id="btn-attract-start" class="attract-cta" aria-label="Touch anywhere to start photobooth">
+            <svg class="touch-lips-svg" viewBox="0 0 460 360" xmlns="http://www.w3.org/2000/svg">
+              <!-- Outer Red Lips with subtle organic speckle -->
+              <path d="M36,184 C74,116 130,30 198,28 C218,28 230,43 238,45 C249,43 263,28 288,30 C354,34 404,104 434,162 C422,246 362,338 236,342 C116,344 58,256 36,184 Z"
+                    fill="#E63423" />
+              <!-- Inner white mouth -->
+              <clipPath id="attract-mouth-clip">
+                <path d="M78,176 C114,108 176,68 238,68 C302,68 362,108 394,162 C378,240 318,298 234,300 C154,302 98,246 78,176 Z" />
+              </clipPath>
+              <path d="M78,176 C114,108 176,68 238,68 C302,68 362,108 394,162 C378,240 318,298 234,300 C154,302 98,246 78,176 Z"
+                    fill="#FFFFFF" />
+              <g clip-path="url(#attract-mouth-clip)">
+                <!-- Upper teeth -->
+                <path d="M72,110 Q236,68 396,112" fill="none" stroke="#E63423" stroke-width="4" />
+                <line x1="120" y1="54" x2="120" y2="102" stroke="#E63423" stroke-width="4" />
+                <line x1="158" y1="54" x2="158" y2="96" stroke="#E63423" stroke-width="4" />
+                <line x1="196" y1="54" x2="196" y2="90" stroke="#E63423" stroke-width="4" />
+                <line x1="234" y1="54" x2="234" y2="88" stroke="#E63423" stroke-width="4" />
+                <line x1="272" y1="54" x2="272" y2="90" stroke="#E63423" stroke-width="4" />
+                <line x1="310" y1="54" x2="310" y2="96" stroke="#E63423" stroke-width="4" />
+                <line x1="348" y1="54" x2="348" y2="104" stroke="#E63423" stroke-width="4" />
+                <!-- Lime green chunky TOUCH TO START lettering -->
+                <g fill="#71C632" stroke="#FFFFFF" stroke-width="6" paint-order="stroke" font-family="'Arial Black', Impact, sans-serif" font-weight="900" text-anchor="middle">
+                  <text x="234" y="160" font-size="60" transform="rotate(-6 234 145)">TOUCH</text>
+                  <text x="236" y="216" font-size="56" transform="rotate(-3 236 205)">TO</text>
+                  <text x="236" y="276" font-size="60" transform="rotate(-5 236 262)">START</text>
+                </g>
+              </g>
+              <!-- Subtle white chalk speckles on lips -->
+              <g fill="#FFFFFF" opacity="0.55">
+                <circle cx="150" cy="60" r="2.2" /><circle cx="290" cy="48" r="2" />
+                <circle cx="370" cy="110" r="2.5" /><circle cx="110" cy="270" r="2.2" />
+                <circle cx="240" cy="322" r="2.5" /><circle cx="330" cy="285" r="2" />
+              </g>
+            </svg>
+
+            <!-- Classic Pixelated Mac Cursor -->
+            <svg class="pixel-cursor" viewBox="0 0 32 44" aria-hidden="true">
+              <polygon points="2,2 2,36 10,28 16,41 21,39 15,26 26,26" fill="#D8D8D8" stroke="#111111" stroke-width="2.5" stroke-linejoin="miter" />
+            </svg>
+          </button>
+
+          <p class="attract-subhint">Free 80mm receipt print + instant QR digital copy · Berkeley Student Food Collective</p>
+        </section>
+
+        <!-- ===============================================================
+             SCREEN 2: NOTICE & CONSENT
+             =============================================================== -->
+        <section id="screen-consent" class="screen" aria-label="Photo Notice and Consent">
+          <div class="consent-card">
+            <div id="consent-logo-holder" class="consent-logo"></div>
+            <h2>Before We Snap!</h2>
+            <p id="consent-notice-text" class="consent-body"></p>
+            <div class="consent-bullets">
+              <div class="bullet-item"><span>📸</span><span>Takes 1 portrait with <strong>1 free retake</strong> if you want a do-over</span></div>
+              <div class="bullet-item"><span>🧾</span><span><strong>1 free thermal print</strong> per session (2-min cooldown between prints)</span></div>
+              <div class="bullet-item"><span>📱</span><span>Instant <strong>QR scan</strong> or <strong>text message</strong> copy to your phone</span></div>
+            </div>
+            <div class="consent-actions">
+              <button id="btn-consent-back" class="btn btn-secondary">Back</button>
+              <button id="btn-consent-agree" class="btn btn-primary">I Agree — Let's Snap!</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===============================================================
+             SCREEN 3: LIVE CAMERA PREVIEW & CAPTURE
+             =============================================================== -->
+        <section id="screen-capture" class="screen" aria-label="Camera Preview">
+          <!-- Playful Randomized Food/Co-op Prompt -->
+          <div class="prompt-banner">
+            <span class="prompt-tag">POSE IDEA</span>
+            <span id="capture-prompt-text" class="prompt-text">Show us your best ripe avocado face!</span>
+            <button id="btn-shuffle-prompt" class="prompt-shuffle" title="New pose idea" aria-label="New pose idea">↻</button>
+          </div>
+
+          <!-- Live Framed Camera Preview matching printed layout.jpg -->
+          <div class="camera-stage-wrap">
+            <div class="live-frame-preview" id="live-frame-preview">
+              <!-- Live architectural border & BSFC logo overlay (non-blocking) -->
+              <div class="frame-overlay-top-rule"></div>
+              <div class="frame-overlay-left-rule"></div>
+              <div class="frame-overlay-right-rule"></div>
+              <div class="frame-overlay-bottom-rule"></div>
+
+              <div class="camera-window">
+                <video id="camera-video" autoplay playsinline muted></video>
+                <div id="camera-fallback" class="camera-fallback hidden">
+                  <div class="fallback-icon">📷</div>
+                  <p id="camera-error-msg">Camera permission is needed to take your photo.</p>
+                  <div class="fallback-btns">
+                    <button id="btn-retry-camera" class="btn btn-secondary">Retry Camera</button>
+                    <button id="btn-demo-photo" class="btn btn-primary">Use Demo Snapshot</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- BSFC Logo Overlay in top-left (outside center face zone) -->
+              <div id="live-logo-overlay" class="live-logo-overlay" aria-hidden="true"></div>
+
+              <!-- Footer preview bar matching printed layout.jpg -->
+              <div class="live-frame-footer" aria-hidden="true">
+                <div class="live-footer-text">
+                  <div>too good not to snap 👄</div>
+                  <div>@bsfcollective</div>
+                  <div class="underlined">2440 Bancroft Way #102, Berkeley, CA 94704</div>
+                </div>
+                <div class="live-footer-qr-placeholder">QR</div>
+              </div>
+
+              <!-- 3-Second Countdown Overlay -->
+              <div id="countdown-overlay" class="countdown-overlay hidden" aria-live="assertive">
+                <span id="countdown-number" class="countdown-number">3</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Capture Action Bar -->
+          <div class="capture-actions">
+            <button id="btn-capture-cancel" class="btn btn-ghost">Cancel</button>
+            <button id="btn-take-photo" class="btn btn-primary btn-lg">
+              <span>📷</span> <span id="take-photo-label">Take Photo</span>
+            </button>
+            <div id="effect-badge" class="effect-badge">Color</div>
+          </div>
+        </section>
+
+        <!-- ===============================================================
+             SCREEN 4: REVIEW & RETAKE TABBED FLOW
+             =============================================================== -->
+        <section id="screen-review" class="screen" aria-label="Review and Retake">
+          <!-- Stepped Review Tabs -->
+          <div class="review-tabs" role="tablist" aria-label="Review steps">
+            <button class="review-tab active" data-tab="shot1" role="tab" aria-selected="true">1. First Shot</button>
+            <button class="review-tab" data-tab="retake" role="tab" aria-selected="false" id="tab-btn-retake">2. Retake (1 left)</button>
+            <button class="review-tab" data-tab="ready" role="tab" aria-selected="false" id="tab-btn-ready">3. Ready to Print</button>
+          </div>
+
+          <!-- Tab Content Area -->
+          <div class="review-body">
+            <!-- Tab 1 & 2: Shot Inspection / Selection -->
+            <div id="review-panel-shots" class="review-panel">
+              <div class="shot-compare-grid" id="shot-compare-grid">
+                <div class="shot-card selected" id="shot-card-1" data-shot="0">
+                  <div class="shot-label">Shot 1 <span class="selected-pill">Selected</span></div>
+                  <canvas id="canvas-shot-1" class="shot-canvas"></canvas>
+                </div>
+                <div class="shot-card hidden" id="shot-card-2" data-shot="1">
+                  <div class="shot-label">Retake Shot <span class="selected-pill">Selected</span></div>
+                  <canvas id="canvas-shot-2" class="shot-canvas"></canvas>
+                </div>
+              </div>
+              <div class="review-panel-actions">
+                <button id="btn-do-retake" class="btn btn-secondary">🔄 Retake (1 Left)</button>
+                <button id="btn-to-ready" class="btn btn-primary">Looks Good — Ready to Print →</button>
+              </div>
+            </div>
+
+            <!-- Tab 3: Ready to Print Confirmation -->
+            <div id="review-panel-ready" class="review-panel hidden">
+              <div class="ready-layout">
+                <div class="ready-preview-col">
+                  <div class="preview-mode-switch">
+                    <button id="btn-preview-thermal" class="mode-chip active">Thermal Receipt B&amp;W</button>
+                    <button id="btn-preview-digital" class="mode-chip">Digital Color</button>
+                  </div>
+                  <canvas id="canvas-final-preview" class="final-strip-canvas"></canvas>
+                </div>
+                <div class="ready-info-col">
+                  <h3>Your BSFC Strip is Ready!</h3>
+                  <p class="ready-note">Each session includes <strong>1 free thermal receipt print</strong> plus instant digital sharing via QR code or text.</p>
+                  <div id="ready-cooldown-alert" class="cooldown-alert hidden" aria-live="polite"></div>
+                  <div class="ready-cta-stack">
+                    <button id="btn-confirm-print" class="btn btn-primary btn-xl">🖨️ Print Strip &amp; Get Digital Copy</button>
+                    <button id="btn-digital-only" class="btn btn-secondary hidden">📱 Get Digital Copy Only (Cooldown Active)</button>
+                    <button id="btn-back-to-shots" class="btn btn-ghost">← Back to Photo Selection</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===============================================================
+             SCREEN 5: PRINTING, COOLDOWN & DIGITAL DELIVERY POP-UP
+             =============================================================== -->
+        <section id="screen-print" class="screen" aria-label="Printing and Digital Sharing">
+          <div class="print-stage">
+            <!-- Whimsical Thermal Printer Receipt Feeding Animation -->
+            <div class="printer-anim-box" id="printer-anim-box">
+              <div class="thermal-printer-top">
+                <div class="printer-led" id="printer-led"></div>
+                <span class="printer-model">EPSON TM-T20III</span>
+              </div>
+              <div class="receipt-slot">
+                <div class="receipt-paper" id="animated-receipt">
+                  <canvas id="canvas-mini-receipt"></canvas>
+                </div>
+              </div>
+              <p id="print-status-heading" class="print-status-heading">Printing your BSFC strip...</p>
+              <div id="print-error-banner" class="print-error-banner hidden" role="alert"></div>
+            </div>
+
+            <!-- Digital Delivery Pop-up Card (QR + SMS) -->
+            <div class="share-popup-card">
+              <h3>Take Your Photo With You!</h3>
+              <div class="share-grid">
+                <!-- QR Code Box -->
+                <div class="qr-box">
+                  <canvas id="canvas-popup-qr" width="176" height="176"></canvas>
+                  <span class="qr-caption">Scan to save full-color strip</span>
+                  <a id="direct-download-link" class="direct-dl-link" download="bsfc-photostrip.png" href="#">Download PNG</a>
+                </div>
+
+                <!-- SMS / Free Email Delivery Box -->
+                <div class="sms-box">
+                  <label for="sms-phone-input">Text or email me my photo strip:</label>
+                  <div class="sms-input-row">
+                    <input
+                      id="sms-phone-input"
+                      type="text"
+                      inputmode="email"
+                      autocomplete="off"
+                      placeholder="(510) 555-0199 or you@berkeley.edu"
+                      maxlength="80"
+                    />
+                    <button id="btn-send-sms" class="btn btn-primary">Send</button>
+                  </div>
+                  <div id="sms-feedback" class="sms-feedback" aria-live="polite"></div>
+                  <p class="sms-privacy">Your contact is used once to send your photo link and never stored for marketing.</p>
+                </div>
+              </div>
+
+              <div class="share-footer-actions">
+                <div id="print-session-cooldown" class="session-cooldown-badge"></div>
+                <button id="btn-done-reset" class="btn btn-primary btn-lg">Done — Next Guest ✓</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Crimson Speckled Spiral Doodle overlapping bottom-right of viewport (from first screen.jpg) -->
+        <svg id="crimson-spiral-doodle" class="crimson-spiral-doodle" viewBox="0 0 120 120" aria-hidden="true">
+          <path d="M84,22 C106,24 114,50 108,74 C100,102 68,116 42,106 C18,96 10,68 22,46 C32,28 58,24 72,38 C84,50 82,72 68,80 C56,87 42,80 40,68 C38,56 49,49 59,54 C64,57 65,64 60,68"
+                fill="none" stroke="#9B1622" stroke-width="11" stroke-linecap="round" />
+          <path d="M84,22 C106,24 114,50 108,74 C100,102 68,116 42,106 C18,96 10,68 22,46 C32,28 58,24 72,38 C84,50 82,72 68,80 C56,87 42,80 40,68 C38,56 49,49 59,54 C64,57 65,64 60,68"
+                fill="none" stroke="#F8D8DC" stroke-width="2" stroke-dasharray="1 11" stroke-linecap="round" opacity="0.7" />
+        </svg>
+
+        <!-- Inactivity Countdown Warning Toast -->
+        <div id="inactivity-toast" class="inactivity-toast hidden" aria-live="polite"></div>
+      </div>
+
+      <!-- Bottom Retro Photo Booth Control Dock (matches first screen.jpg) -->
+      <footer class="booth-dock">
+        <div class="dock-segment" aria-label="Booth step indicators">
+          <button id="dock-mode-grid" class="dock-seg-btn active" title="Start / Attract" aria-label="Attract screen">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/>
+              <rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/>
+            </svg>
+          </button>
+          <button id="dock-mode-single" class="dock-seg-btn" title="Portrait Capture" aria-label="Portrait mode">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <circle cx="12" cy="8" r="4"/><path d="M5,20 C5,15.5 8,13 12,13 C16,13 19,15.5 19,20 Z"/>
+            </svg>
+          </button>
+          <button id="dock-mode-strip" class="dock-seg-btn" title="Print &amp; Share" aria-label="Print and share">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <rect x="4" y="6" width="11" height="12" rx="2"/><polygon points="16,9 21,6 21,18 16,15"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Center Circular Coral Camera Shutter Button -->
+        <button id="dock-shutter-btn" class="dock-shutter-btn" aria-label="Start or Take Photo">
+          <svg viewBox="0 0 28 24" width="30" height="26" fill="none" stroke="#FFF4EA" stroke-width="2.2" stroke-linejoin="round">
+            <path d="M3,7 L8,7 L10,4 L18,4 L20,7 L25,7 C26.1,7 27,7.9 27,9 L27,20 C27,21.1 26.1,22 25,22 L3,22 C1.9,22 1,21.1 1,20 L1,9 C1,7.9 1.9,7 3,7 Z"/>
+            <circle cx="14" cy="14.5" r="4.5"/>
+          </svg>
+        </button>
+
+        <!-- Right Effects Pill Button -->
+        <button id="dock-effects-btn" class="dock-effects-btn" title="Cycle camera preview effect">
+          Effects
+        </button>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Shutter Flash Overlay -->
+  <div id="flash-overlay" class="flash-overlay hidden" aria-hidden="true"></div>
+
+  <!-- ===================================================================
+       ? HELP / HOW IT WORKS MODAL
+       =================================================================== -->
+  <div id="modal-help" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="help-modal-title">
+    <div class="modal-card">
+      <button class="modal-close" data-close-modal="modal-help" aria-label="Close help">✕</button>
+      <h2 id="help-modal-title">How the BSFC Photobooth Works</h2>
+      <ol class="help-steps">
+        <li><strong>Touch to Start:</strong> Tap anywhere on the welcome screen and review the community wall photo notice.</li>
+        <li><strong>Strike a Pose:</strong> Use the live BSFC frame preview and playful pose ideas, then hit <em>Take Photo</em> for a 3-second countdown.</li>
+        <li><strong>Review &amp; 1 Free Retake:</strong> Not loving the first shot? You get <strong>1 retake</strong> before printing!</li>
+        <li><strong>Print &amp; Share:</strong> Grab your <strong>free 80mm receipt strip</strong> (1 print per session, 2-minute cooldown) and scan the QR code or enter your phone number for a full-color digital copy.</li>
+      </ol>
+      <p class="help-footer-note">Questions? Ask any BSFC collective member at the register! · 2440 Bancroft Way #102</p>
+      <button class="btn btn-primary" data-close-modal="modal-help">Got It!</button>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       ADMIN 4-DIGIT PIN MODAL
+       =================================================================== -->
+  <div id="modal-admin-pin" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="pin-modal-title">
+    <div class="modal-card pin-card">
+      <button class="modal-close" data-close-modal="modal-admin-pin" aria-label="Close PIN prompt">✕</button>
+      <h2 id="pin-modal-title">Staff Admin PIN</h2>
+      <p class="pin-sub">Enter the 4-digit store register code:</p>
+      <div class="pin-dots" id="pin-dots" aria-live="polite">
+        <span></span><span></span><span></span><span></span>
+      </div>
+      <div id="pin-error" class="pin-error"></div>
+      <div class="pin-keypad">
+        <button class="pin-key" data-digit="1">1</button>
+        <button class="pin-key" data-digit="2">2</button>
+        <button class="pin-key" data-digit="3">3</button>
+        <button class="pin-key" data-digit="4">4</button>
+        <button class="pin-key" data-digit="5">5</button>
+        <button class="pin-key" data-digit="6">6</button>
+        <button class="pin-key" data-digit="7">7</button>
+        <button class="pin-key" data-digit="8">8</button>
+        <button class="pin-key" data-digit="9">9</button>
+        <button class="pin-key pin-key-muted" id="pin-clear">CLR</button>
+        <button class="pin-key" data-digit="0">0</button>
+        <button class="pin-key pin-key-muted" id="pin-back">⌫</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       ADMIN CONTROL PANEL MODAL
+       =================================================================== -->
+  <div id="modal-admin-panel" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="admin-panel-title">
+    <div class="modal-card admin-panel-card">
+      <button class="modal-close" data-close-modal="modal-admin-panel" aria-label="Close Admin Menu">✕</button>
+      <h2 id="admin-panel-title">BSFC Kiosk Admin</h2>
+
+      <div class="admin-grid">
+        <!-- Store Hours / Sleep Mode -->
+        <div class="admin-section">
+          <h3>Store &amp; Booth State</h3>
+          <div class="admin-row">
+            <span>Sleep / Maintenance Mode</span>
+            <button id="admin-toggle-sleep" class="btn btn-secondary">Enable Sleep Mode</button>
+          </div>
+          <div class="admin-row">
+            <span>Print Cooldown: <strong id="admin-cooldown-status">Ready</strong></span>
+            <button id="admin-reset-cooldown" class="btn btn-secondary">Override / Reset Cooldown</button>
+          </div>
+          <div class="admin-row">
+            <span>Free Kiosk Display (Chrome Fullscreen)</span>
+            <button id="admin-fullscreen" class="btn btn-secondary">Toggle Fullscreen</button>
+          </div>
+        </div>
+
+        <!-- Thermal Printer Diagnostics -->
+        <div class="admin-section">
+          <h3>Thermal Printer (Epson TM-T20III)</h3>
+          <div class="admin-row">
+            <span>Connection Status: <strong id="admin-printer-status">Checking...</strong></span>
+            <button id="admin-check-printer" class="btn btn-secondary">Check Printer</button>
+          </div>
+          <div class="admin-row">
+            <label for="admin-printer-mode">Transport Mode</label>
+            <select id="admin-printer-mode">
+              <option value="auto">Auto (Free WebUSB → Relay → BLE → RawBT)</option>
+              <option value="web-usb">WebUSB Direct Cable (100% Free, No App)</option>
+              <option value="backend-relay">Backend Network Relay (100% Free, Port 9100)</option>
+              <option value="web-bluetooth">Web Bluetooth (100% Free BLE)</option>
+              <option value="rawbt-ws">RawBT WebSocket (localhost:40213)</option>
+              <option value="rawbt-intent">RawBT Android Intent</option>
+              <option value="simulator">Mac/UI Simulator Mode</option>
+            </select>
+          </div>
+          <div class="admin-row">
+            <label for="admin-dither-method">Dithering</label>
+            <select id="admin-dither-method">
+              <option value="atkinson">Atkinson (Best for Faces)</option>
+              <option value="floyd-steinberg">Floyd-Steinberg</option>
+            </select>
+          </div>
+          <div class="admin-row">
+            <span>Simulate Printer Offline / Out of Paper</span>
+            <button id="admin-toggle-sim-error" class="btn btn-secondary">Off</button>
+          </div>
+          <div class="admin-actions-inline">
+            <button id="admin-pair-usb" class="btn btn-secondary">Pair USB Printer (Free)</button>
+            <button id="admin-pair-ble" class="btn btn-secondary">Pair Bluetooth</button>
+            <button id="admin-test-print" class="btn btn-primary">Run Test Print</button>
+          </div>
+          <div id="admin-printer-log" class="admin-log"></div>
+        </div>
+      </div>
+
+      <div class="admin-footer">
+        <button class="btn btn-primary" data-close-modal="modal-admin-panel">Close Admin Menu</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================
+       SLEEP / MAINTENANCE MODE OVERLAY
+       =================================================================== -->
+  <div id="sleep-overlay" class="sleep-overlay hidden" role="dialog" aria-label="Booth in Sleep Mode">
+    <!-- Keep top-left hidden trigger reachable during sleep mode -->
+    <button id="sleep-admin-trigger" class="admin-trigger" aria-label="Wake Admin Trigger" tabindex="-1"></button>
+    <div class="sleep-content">
+      <div class="sleep-moon">🌙</div>
+      <h2>BSFC Photobooth is Resting</h2>
+      <p>The Berkeley Student Food Collective is currently closed or performing maintenance.<br />See you during store hours at 2440 Bancroft Way #102!</p>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="qrcode.js"></script>
+  <script src="assets.js"></script>
+  <script src="printer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

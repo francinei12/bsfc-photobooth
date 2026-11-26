@@ -1,0 +1,17 @@
+{
+  "name": "BSFC Storefront Photobooth",
+  "short_name": "BSFC Booth",
+  "description": "Free storefront thermal photobooth for the Berkeley Student Food Collective",
+  "start_url": "/",
+  "display": "fullscreen",
+  "background_color": "#E58D7D",
+  "theme_color": "#E58D7D",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
